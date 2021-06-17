@@ -1,39 +1,55 @@
-
-import './App.css';
-import { useEffect, useState } from 'react';
-import Display from './Display';
+import "./App.css";
+import { useState } from "react";
+import { Todo } from "./Todo";
+import { TodoForm } from "./TodoForm";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [age, setAge] = useState(0);
-  // called always (initial load + any state or props )
-  useEffect(() => {
-    console.log('One Updated');
-  });
-  useEffect(() => {
-    console.log('Two Updated');
-  }, []);
-  useEffect(() => {
-    console.log('Count Updated');
-  }, [count]);
-  useEffect(() => {
-    console.log('Age Updated');
-  }, [age]);
-  useEffect(() => {
-    console.log('Both Updated');
-  }, [count, age]);
-  useEffect(() => {
-    return () => {
-      console.log('Destroyed');
-    }
-  });
+  const [todos, setTodos] = useState([
+    {
+      text: "Learn about React",
+      isCompleted: false,
+    },
+    {
+      text: "Meet friend for lunch",
+      isCompleted: false,
+    },
+    {
+      text: "Build app",
+      isCompleted: false,
+    },
+  ]);
+
+  const addTodo = (text) => {
+    const newTodos = [...todos, { text, isCompleted: false }];
+    setTodos(newTodos);
+  };
+
+  const updateTodo = (index, status) => {
+    const newTodos = [...todos];
+    newTodos[index].isCompleted = status;
+    setTodos(newTodos);
+  };
+
+  const removeTodo = (index) => {
+    const newTodos = [...todos];
+    newTodos.splice(index, 1);
+    setTodos(newTodos);
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <Display value={count} text={'Count'} callback={setCount} />
-        <Display value={age} text={'Age'} callback={setAge} />
-      </header>
+    <div className="app">
+      <div className="todo-list">
+        {todos.map((todo, index) => (
+          <Todo
+            key={index}
+            index={index}
+            todo={todo}
+            updateTodo={updateTodo}
+            removeTodo={removeTodo}
+          />
+        ))}
+        <TodoForm addTodo={addTodo} />
+      </div>
     </div>
   );
 }
